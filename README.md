@@ -14,7 +14,7 @@ Unitree Go2 로봇의 MuJoCo 시뮬레이션 환경입니다. devcontainer를 �
 
 ## 환경 구축
 
-### 방법 1: VS Code 사용
+### 방법 1: VS Code 사용 (권장)
 
 1. 이 레포지토리를 클론합니다.
    ```bash
@@ -54,44 +54,35 @@ npx @devcontainers/cli up --workspace-folder .
 
 ### 시뮬레이터 실행
 
-1. 컨테이너 내부 터미널에서 시뮬레이터를 시작합니다.
-   ```bash
-   export DISPLAY=:1
-   export XAUTHORITY=/home/vscode/.Xauthority
-   export LIBGL_ALWAYS_SOFTWARE=1
-   cd /workspace/unitree_mujoco/simulate_python
-   python3 unitree_mujoco.py
-   ```
-
-2. 브라우저에서 **http://localhost:6080** 을 열어 VNC 데스크톱을 확인합니다.
-   - 비밀번호: `unitree`
-   - MuJoCo 시뮬레이터 창에서 Go2 로봇이 보입니다.
-
-### 호스트에서 직접 실행 (devcontainer CLI 사용 시)
+컨테이너 터미널에서 스크립트를 실행합니다:
 
 ```bash
-# 컨테이너 ID 확인
-docker ps --filter "label=devcontainer.local_folder=$(pwd)" --format "{{.ID}}"
-
-# 시뮬레이터 실행
-docker exec -d <CONTAINER_ID> bash -c '\
-  export DISPLAY=:1 && \
-  export XAUTHORITY=/home/vscode/.Xauthority && \
-  export LIBGL_ALWAYS_SOFTWARE=1 && \
-  cd /workspace/unitree_mujoco/simulate_python && \
-  python3 unitree_mujoco.py'
+bash /workspace/scripts/start_simulator.sh
 ```
+
+브라우저에서 **http://localhost:6080** 을 열어 VNC 데스크톱을 확인합니다.
+- 비밀번호: `unitree`
+- MuJoCo 시뮬레이터 창에서 Go2 로봇이 보입니다.
 
 ### 테스트 프로그램 실행
 
 시뮬레이터가 실행 중인 상태에서 **별도의 터미널**을 열고:
 
 ```bash
-cd /workspace/unitree_mujoco/simulate_python
-python3 ./test/test_unitree_sdk2.py
+# 기본 테스트 (각 모터에 1Nm 토크 인가 + 상태 출력)
+bash /workspace/scripts/run_test.sh
+
+# Go2 일어서기/눕기 예제
+bash /workspace/scripts/stand_go2.sh
 ```
 
-이 프로그램은 로봇의 자세와 위치 정보를 출력하며, 각 모터에 1Nm 토크를 인가합니다.
+### 스크립트 목록
+
+| 스크립트 | 설명 |
+|----------|------|
+| `scripts/start_simulator.sh` | MuJoCo 시뮬레이터 실행 |
+| `scripts/run_test.sh` | 기본 모터 테스트 실행 |
+| `scripts/stand_go2.sh` | Go2 일어서기 예제 실행 |
 
 ### 시뮬레이터 설정 변경
 
@@ -109,9 +100,14 @@ USE_JOYSTICK = 0        # 조이스틱 사용 여부 (Docker에서는 0)
 
 ### 시뮬레이터 종료
 
-- 시뮬레이터 터미널에서 `Ctrl+C`를 눌러 종료합니다.
+시뮬레이터 터미널에서 `Ctrl+C`를 눌러 종료합니다.
 
-### 컨테이너 종료
+### VS Code 사용 시
+
+- 좌하단 `><` 아이콘 → **Reopen Folder Locally**를 선택하면 컨테이너에서 빠져나옵니다.
+- 컨테이너를 완전히 삭제하려면 Docker Desktop에서 해당 컨테이너를 삭제합니다.
+
+### devcontainer CLI 사용 시
 
 ```bash
 # 컨테이너 ID 확인
@@ -124,11 +120,6 @@ docker stop <CONTAINER_ID>
 docker rm <CONTAINER_ID>
 ```
 
-### VS Code 사용 시
-
-- 좌하단 `><` 아이콘을 클릭하고 **Reopen Folder Locally**를 선택하면 컨테이너에서 빠져나옵니다.
-- 컨테이너를 완전히 삭제하려면 Docker Desktop에서 해당 컨테이너를 삭제합니다.
-
 ## 프로젝트 구조
 
 ```
@@ -137,6 +128,10 @@ go2_under_docker/
 │   ├── devcontainer.json    # devcontainer 설정 (VNC, 포트 매핑 등)
 │   ├── Dockerfile           # Ubuntu 22.04 + 시스템 의존성
 │   └── post-create.sh       # 자동 설치 스크립트
+├── scripts/
+│   ├── start_simulator.sh   # 시뮬레이터 실행
+│   ├── run_test.sh          # 기본 모터 테스트
+│   └── stand_go2.sh         # Go2 일어서기 예제
 ├── .gitignore
 ├── README.md
 └── unitree_mujoco/          # (컨테이너 생성 시 자동 클론)
