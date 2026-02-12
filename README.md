@@ -4,7 +4,6 @@ Unitree Go2 로봇의 MuJoCo 시뮬레이션 환경입니다. devcontainer를 �
 
 <img width="1492" height="792" alt="image" src="https://github.com/user-attachments/assets/c41d2ea3-71a4-4088-a117-975c6cef1497" />
 
-
 ## 사전 요구 사항
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
@@ -36,8 +35,16 @@ Unitree Go2 로봇의 MuJoCo 시뮬레이션 환경입니다. devcontainer를 �
 ```bash
 git clone https://github.com/iamchiwon-v6x/go2_under_docker.git
 cd go2_under_docker
-npx @devcontainers/cli up --workspace-folder .
+devcontainer up --workspace-folder .
 ```
+
+컨테이너가 시작되면 셸에 접속합니다:
+
+```bash
+devcontainer exec --workspace-folder . bash
+```
+
+> **Tip**: 테스트 시 터미널이 2개 필요합니다 (시뮬레이터용 + 제어 프로그램용). 위 명령을 두 개의 터미널에서 각각 실행하세요.
 
 ### 자동으로 설치되는 항목
 
@@ -48,32 +55,36 @@ npx @devcontainers/cli up --workspace-folder .
 | [unitree_mujoco](https://github.com/unitreerobotics/unitree_mujoco) | MuJoCo 기반 Unitree 로봇 시뮬레이터 |
 | [cyclonedds 0.10.2](https://github.com/eclipse-cyclonedds/cyclonedds) | DDS 통신 라이브러리 (소스 빌드) |
 | [unitree_sdk2_python](https://github.com/unitreerobotics/unitree_sdk2_python) | Unitree SDK2 Python 바인딩 |
-| mujoco, pygame, numpy | Python 시뮬레이터 의존성 |
+| mujoco, pygame, numpy, opencv-python-headless | Python 시뮬레이터 의존성 |
 
-## 사용 방법
+## 빠른 시작
 
-### 시뮬레이터 실행
+### 1. 시뮬레이터 실행
 
-컨테이너 터미널에서 스크립트를 실행합니다:
+컨테이너 터미널에서:
 
 ```bash
-bash /workspace/scripts/start_simulator.sh
+./scripts/start_simulator.sh
 ```
 
-브라우저에서 **http://localhost:6080** 을 열어 VNC 데스크톱을 확인합니다.
+### 2. VNC로 시뮬레이터 화면 확인
+
+브라우저에서 **http://localhost:6080** 을 열면 VNC 데스크톱이 나타납니다.
 - 비밀번호: `unitree`
-- MuJoCo 시뮬레이터 창에서 Go2 로봇이 보입니다.
+- MuJoCo 창에 Go2 로봇이 보이면 정상입니다.
 
-### 테스트 프로그램 실행
+### 3. 제어 프로그램 실행
 
-시뮬레이터가 실행 중인 상태에서 **별도의 터미널**을 열고:
+시뮬레이터를 켜둔 상태에서, **별도의 터미널**을 열어 제어 프로그램을 실행합니다.
+
+VS Code에서는 `Ctrl+Shift+~` 로 새 터미널을 열 수 있습니다. devcontainer CLI를 사용하는 경우 새 터미널 탭에서 `devcontainer exec --workspace-folder . bash`로 접속하세요.
 
 ```bash
-# 기본 테스트 (각 모터에 1Nm 토크 인가 + 상태 출력)
-bash /workspace/scripts/run_test.sh
+# 기본 테스트: 각 모터에 1Nm 토크를 인가하고 상태를 출력합니다
+./scripts/run_test.sh
 
 # Go2 일어서기/눕기 예제
-bash /workspace/scripts/stand_go2.sh
+./scripts/stand_go2.sh
 ```
 
 ### 스크립트 목록
@@ -81,12 +92,12 @@ bash /workspace/scripts/stand_go2.sh
 | 스크립트 | 설명 |
 |----------|------|
 | `scripts/start_simulator.sh` | MuJoCo 시뮬레이터 실행 |
-| `scripts/run_test.sh` | 기본 모터 테스트 실행 |
-| `scripts/stand_go2.sh` | Go2 일어서기 예제 실행 |
+| `scripts/run_test.sh` | 기본 모터 테스트 (시뮬레이터 실행 필요) |
+| `scripts/stand_go2.sh` | Go2 일어서기 예제 (시뮬레이터 실행 필요) |
 
-### 시뮬레이터 설정 변경
+## 시뮬레이터 설정
 
-설정 파일: `/workspace/unitree_mujoco/simulate_python/config.py`
+설정 파일: `unitree_mujoco/simulate_python/config.py`
 
 ```python
 ROBOT = "go2"           # 로봇 모델: "go2", "b2", "b2w", "h1", "go2w", "g1"
@@ -125,9 +136,10 @@ docker rm <CONTAINER_ID>
 ```
 go2_under_docker/
 ├── .devcontainer/
-│   ├── devcontainer.json    # devcontainer 설정 (VNC, 포트 매핑 등)
+│   ├── devcontainer.json    # devcontainer 설정 (VNC, 포트 매핑, 환경 변수)
 │   ├── Dockerfile           # Ubuntu 22.04 + 시스템 의존성
-│   └── post-create.sh       # 자동 설치 스크립트
+│   ├── post-create.sh       # 자동 설치 스크립트
+│   └── cyclonedds.xml       # CycloneDDS 통신 설정
 ├── scripts/
 │   ├── start_simulator.sh   # 시뮬레이터 실행
 │   ├── run_test.sh          # 기본 모터 테스트
@@ -135,7 +147,6 @@ go2_under_docker/
 ├── .gitignore
 ├── README.md
 └── unitree_mujoco/          # (컨테이너 생성 시 자동 클론)
-    ├── simulate/            # C++ 시뮬레이터
     ├── simulate_python/     # Python 시뮬레이터 (기본 사용)
     ├── unitree_robots/      # 로봇 MJCF 모델 파일
     ├── terrain_tool/        # 지형 생성 도구
