@@ -1,0 +1,21 @@
+# unitree_mujoco (cloned at container creation time)
+unitree_mujoco/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/*
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo

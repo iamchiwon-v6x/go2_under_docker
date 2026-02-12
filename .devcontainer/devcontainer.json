@@ -1,0 +1,29 @@
+{
+  "name": "Unitree MuJoCo Simulator",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/desktop-lite:1": {
+      "password": "unitree",
+      "webPort": "6080",
+      "vncPort": "5901"
+    }
+  },
+  "forwardPorts": [6080, 5901],
+  "postCreateCommand": "bash /workspace/.devcontainer/post-create.sh",
+  "workspaceFolder": "/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "runArgs": ["--privileged", "-p", "6080:6080", "-p", "5901:5901"],
+  "containerEnv": {
+    "DISPLAY": ":1",
+    "LIBGL_ALWAYS_SOFTWARE": "1"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python"
+      ]
+    }
+  }
+}
