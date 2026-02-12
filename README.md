@@ -2,6 +2,9 @@
 
 Unitree Go2 로봇의 MuJoCo 시뮬레이션 환경입니다. devcontainer를 사용하여 Docker 안에서 Ubuntu 환경을 구성하고, VNC를 통해 시뮬레이터 화면을 볼 수 있습니다.
 
+<img width="1492" height="792" alt="image" src="https://github.com/user-attachments/assets/c41d2ea3-71a4-4088-a117-975c6cef1497" />
+
+
 ## 사전 요구 사항
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
