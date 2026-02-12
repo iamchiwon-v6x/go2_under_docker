@@ -15,8 +15,8 @@ Unitree Go2 로봇의 MuJoCo 시뮬레이션 환경입니다. devcontainer를 �
 
 1. 이 레포지토리를 클론합니다.
    ```bash
-   git clone <this-repo-url>
-   cd go2
+   git clone https://github.com/iamchiwon-v6x/go2_under_docker.git
+   cd go2_under_docker
    ```
 
 2. VS Code에서 폴더를 엽니다.
@@ -31,8 +31,8 @@ Unitree Go2 로봇의 MuJoCo 시뮬레이션 환경입니다. devcontainer를 �
 ### 방법 2: devcontainer CLI 사용
 
 ```bash
-git clone <this-repo-url>
-cd go2
+git clone https://github.com/iamchiwon-v6x/go2_under_docker.git
+cd go2_under_docker
 npx @devcontainers/cli up --workspace-folder .
 ```
 
@@ -129,7 +129,7 @@ docker rm <CONTAINER_ID>
 ## 프로젝트 구조
 
 ```
-go2/
+go2_under_docker/
 ├── .devcontainer/
 │   ├── devcontainer.json    # devcontainer 설정 (VNC, 포트 매핑 등)
 │   ├── Dockerfile           # Ubuntu 22.04 + 시스템 의존성
