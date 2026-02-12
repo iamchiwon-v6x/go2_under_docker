@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+SDK2_DIR=/opt/unitree_sdk2_python
+
 echo "=== Cloning unitree_mujoco ==="
 cd /workspace
 if [ ! -d "unitree_mujoco" ]; then
@@ -20,12 +22,17 @@ sudo make install
 
 echo "=== Installing unitree_sdk2_python ==="
 export CYCLONEDDS_HOME=/usr/local
-cd /tmp
-if [ ! -d "unitree_sdk2_python" ]; then
-    git clone https://github.com/unitreerobotics/unitree_sdk2_python.git
+if [ ! -d "$SDK2_DIR" ]; then
+    sudo git clone https://github.com/unitreerobotics/unitree_sdk2_python.git "$SDK2_DIR"
+    sudo chown -R $(whoami) "$SDK2_DIR"
 fi
-cd unitree_sdk2_python
-pip3 install -e .
+
+echo "=== Patching unitree_sdk2py (remove unused b2 import) ==="
+sed -i 's/from . import idl, utils, core, rpc, go2, b2/from . import idl, utils, core, rpc, go2/' \
+    "$SDK2_DIR/unitree_sdk2py/__init__.py"
+
+cd "$SDK2_DIR"
+sudo pip3 install -e .
 
 echo "=== Configuring simulator for Docker (no joystick) ==="
 sed -i 's/USE_JOYSTICK = 1/USE_JOYSTICK = 0/' /workspace/unitree_mujoco/simulate_python/config.py

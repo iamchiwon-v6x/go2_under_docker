@@ -4,6 +4,7 @@
 export DISPLAY=:1
 export XAUTHORITY=/home/vscode/.Xauthority
 export LIBGL_ALWAYS_SOFTWARE=1
+export CYCLONEDDS_URI=file:///workspace/.devcontainer/cyclonedds.xml
 
 cd /workspace/unitree_mujoco/simulate_python
 echo "=== Go2 MuJoCo 시뮬레이터 시작 ==="

@@ -29,6 +29,7 @@ RUN apt-get update && apt-get install -y \
 RUN pip3 install --no-cache-dir \
     mujoco \
     pygame \
-    numpy
+    numpy \
+    opencv-python-headless
 
 WORKDIR /workspace

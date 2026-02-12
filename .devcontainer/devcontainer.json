@@ -17,7 +17,9 @@
   "runArgs": ["--privileged", "-p", "6080:6080", "-p", "5901:5901"],
   "containerEnv": {
     "DISPLAY": ":1",
-    "LIBGL_ALWAYS_SOFTWARE": "1"
+    "LIBGL_ALWAYS_SOFTWARE": "1",
+    "CYCLONEDDS_HOME": "/usr/local",
+    "CYCLONEDDS_URI": "file:///workspace/.devcontainer/cyclonedds.xml"
   },
   "customizations": {
     "vscode": {
