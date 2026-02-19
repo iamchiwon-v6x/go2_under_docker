@@ -8,6 +8,10 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     git \
     wget \
+    curl \
+    gnupg \
+    lsb-release \
+    software-properties-common \
     libgl1-mesa-dev \
     libgl1-mesa-glx \
     libegl1-mesa-dev \
@@ -25,6 +29,26 @@ RUN apt-get update && apt-get install -y \
     mesa-utils \
     xvfb \
     && rm -rf /var/lib/apt/lists/*
+
+# Install ROS2 Humble
+RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros2.list \
+    && apt-get update && apt-get install -y \
+    ros-humble-ros-base \
+    ros-humble-rmw-cyclonedds-cpp \
+    ros-humble-rosidl-generator-dds-idl \
+    ros-dev-tools \
+    python3-colcon-common-extensions \
+    python3-rosdep \
+    && rm -rf /var/lib/apt/lists/*
+
+# Initialize rosdep
+RUN rosdep init || true \
+    && su vscode -c "rosdep update" || true
+
+# Source ROS2 setup in bash for all users
+RUN echo "source /opt/ros/humble/setup.bash" >> /etc/bash.bashrc \
+    && echo "source /opt/ros/humble/setup.bash" >> /home/vscode/.bashrc
 
 RUN pip3 install --no-cache-dir \
     mujoco \

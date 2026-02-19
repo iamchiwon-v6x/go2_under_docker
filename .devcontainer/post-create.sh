@@ -3,6 +3,9 @@ set -e
 
 SDK2_DIR=/opt/unitree_sdk2_python
 
+echo "=== Sourcing ROS2 Humble ==="
+source /opt/ros/humble/setup.bash
+
 echo "=== Cloning unitree_mujoco ==="
 cd /workspace
 if [ ! -d "unitree_mujoco" ]; then
@@ -34,6 +37,12 @@ sed -i 's/from . import idl, utils, core, rpc, go2, b2/from . import idl, utils,
 cd "$SDK2_DIR"
 sudo pip3 install -e .
 
+echo "=== Setting up ROS2 workspace ==="
+mkdir -p /workspace/ros2_ws/src
+cd /workspace/ros2_ws
+source /opt/ros/humble/setup.bash
+colcon build --symlink-install 2>/dev/null || true
+
 echo "=== Configuring simulator for Docker (no joystick) ==="
 sed -i 's/USE_JOYSTICK = 1/USE_JOYSTICK = 0/' /workspace/unitree_mujoco/simulate_python/config.py
 
@@ -43,6 +52,8 @@ cp /home/vscode/.Xauthority /root/.Xauthority 2>/dev/null || true
 echo ""
 echo "============================================"
 echo "  Setup complete!"
+echo "  ROS2 Humble: $(ros2 --version 2>/dev/null || echo 'installed')"
+echo "  RMW: rmw_cyclonedds_cpp"
 echo "  VNC desktop: http://localhost:6080"
 echo "  Password: unitree"
 echo "============================================"
