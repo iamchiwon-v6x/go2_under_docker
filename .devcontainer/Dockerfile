@@ -37,9 +37,12 @@ RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o 
     ros-humble-ros-base \
     ros-humble-rmw-cyclonedds-cpp \
     ros-humble-rosidl-generator-dds-idl \
+    ros-humble-cv-bridge \
+    ros-humble-image-transport \
     ros-dev-tools \
     python3-colcon-common-extensions \
     python3-rosdep \
+    python3-opencv \
     && rm -rf /var/lib/apt/lists/*
 
 # Initialize rosdep
