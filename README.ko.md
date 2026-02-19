@@ -46,16 +46,44 @@ devcontainer exec --workspace-folder . bash
 
 > **Tip**: 테스트 시 터미널이 2개 필요합니다 (시뮬레이터용 + 제어 프로그램용). 위 명령을 두 개의 터미널에서 각각 실행하세요.
 
-### 자동으로 설치되는 항목
+### 컨테이너에 설치되는 항목
 
-컨테이너 생성 시 `post-create.sh`가 자동으로 다음을 설치합니다:
+#### Docker 이미지 (Dockerfile)
+
+| 카테고리 | 항목 | 설명 |
+|----------|------|------|
+| 베이스 | Ubuntu 22.04 | `mcr.microsoft.com/devcontainers/base:ubuntu-22.04` |
+| ROS2 | ros-humble-ros-base | ROS2 Humble 핵심 런타임 |
+| ROS2 | ros-humble-rmw-cyclonedds-cpp | CycloneDDS RMW 구현체 |
+| ROS2 | ros-humble-rosidl-generator-dds-idl | DDS IDL 생성기 |
+| ROS2 | ros-humble-cv-bridge | OpenCV-ROS2 브릿지 |
+| ROS2 | ros-humble-image-transport | 이미지 전송 라이브러리 |
+| ROS2 빌드 | ros-dev-tools, python3-colcon-common-extensions, python3-rosdep | ROS2 빌드 도구 |
+| Python | mujoco, pygame, numpy, opencv-python-headless | 시뮬레이터 의존성 |
+| Python | python3-opencv | OpenCV Python 바인딩 |
+| 시스템 | cmake, build-essential, libgl1-mesa-dev 등 | 빌드 및 그래픽 라이브러리 |
+| VNC | desktop-lite (devcontainer feature) | 웹 브라우저 VNC 데스크톱 |
+
+#### 자동 설치 (post-create.sh)
+
+컨테이너 최초 생성 시 자동으로 실행됩니다:
 
 | 항목 | 설명 |
 |------|------|
 | [unitree_mujoco](https://github.com/unitreerobotics/unitree_mujoco) | MuJoCo 기반 Unitree 로봇 시뮬레이터 |
 | [cyclonedds 0.10.2](https://github.com/eclipse-cyclonedds/cyclonedds) | DDS 통신 라이브러리 (소스 빌드) |
 | [unitree_sdk2_python](https://github.com/unitreerobotics/unitree_sdk2_python) | Unitree SDK2 Python 바인딩 |
-| mujoco, pygame, numpy, opencv-python-headless | Python 시뮬레이터 의존성 |
+| ROS2 워크스페이스 | `/workspace/ros2_ws/` 초기화 및 빌드 |
+
+#### 환경 변수
+
+| 변수 | 값 | 설명 |
+|------|-----|------|
+| `ROS_DOMAIN_ID` | `0` | ROS2 도메인 ID |
+| `ROS_LOCALHOST_ONLY` | `1` | DDS discovery를 localhost로 제한 (Docker 호환) |
+| `RMW_IMPLEMENTATION` | `rmw_cyclonedds_cpp` | DDS 미들웨어 구현체 |
+| `CYCLONEDDS_URI` | `file:///.../cyclonedds.xml` | CycloneDDS 설정 파일 |
+| `CYCLONEDDS_HOME` | `/usr/local` | CycloneDDS 설치 경로 |
 
 ## 빠른 시작
 

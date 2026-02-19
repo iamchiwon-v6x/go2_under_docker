@@ -48,16 +48,42 @@ devcontainer exec --workspace-folder . bash
 
 > **Tip**: You need two terminals for testing (one for the simulator, one for the control program). Run the command above in two separate terminal tabs.
 
-### Auto-Installed Dependencies
+### What's Installed in the Container
 
-When the container is created, `post-create.sh` automatically installs:
+#### Docker Image (Dockerfile)
+
+| Category | Package | Description |
+|----------|---------|-------------|
+| Base | Ubuntu 22.04 | `mcr.microsoft.com/devcontainers/base:ubuntu-22.04` |
+| ROS2 | ros-humble-ros-base | ROS2 Humble core runtime |
+| ROS2 | ros-humble-rmw-cyclonedds-cpp | CycloneDDS RMW implementation |
+| ROS2 | ros-humble-rosidl-generator-dds-idl | DDS IDL generator |
+| ROS2 | ros-humble-cv-bridge | OpenCV–ROS2 bridge |
+| ROS2 | ros-humble-image-transport | Image transport library |
+| ROS2 Build | ros-dev-tools, python3-colcon-common-extensions, python3-rosdep | ROS2 build tools |
+| Python | mujoco, pygame, numpy, opencv-python-headless | Simulator dependencies |
+| Python | python3-opencv | OpenCV Python bindings |
+| System | cmake, build-essential, libgl1-mesa-dev, etc. | Build and graphics libraries |
+| VNC | desktop-lite (devcontainer feature) | Browser-based VNC desktop |
+
+#### Auto-Installed on First Run (post-create.sh)
 
 | Package | Description |
 |---------|-------------|
 | [unitree_mujoco](https://github.com/unitreerobotics/unitree_mujoco) | MuJoCo-based Unitree robot simulator |
 | [cyclonedds 0.10.2](https://github.com/eclipse-cyclonedds/cyclonedds) | DDS communication library (built from source) |
 | [unitree_sdk2_python](https://github.com/unitreerobotics/unitree_sdk2_python) | Unitree SDK2 Python bindings |
-| mujoco, pygame, numpy, opencv-python-headless | Python simulator dependencies |
+| ROS2 workspace | `/workspace/ros2_ws/` initialization and build |
+
+#### Environment Variables
+
+| Variable | Value | Description |
+|----------|-------|-------------|
+| `ROS_DOMAIN_ID` | `0` | ROS2 domain ID |
+| `ROS_LOCALHOST_ONLY` | `1` | Restrict DDS discovery to localhost (Docker compatible) |
+| `RMW_IMPLEMENTATION` | `rmw_cyclonedds_cpp` | DDS middleware implementation |
+| `CYCLONEDDS_URI` | `file:///.../cyclonedds.xml` | CycloneDDS config file |
+| `CYCLONEDDS_HOME` | `/usr/local` | CycloneDDS install path |
 
 ## Quick Start
 
