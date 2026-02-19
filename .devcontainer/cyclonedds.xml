@@ -8,9 +8,6 @@
       <AllowMulticast>false</AllowMulticast>
       <EnableMulticastLoopback>false</EnableMulticastLoopback>
     </General>
-    <Internal>
-      <EnableExpensiveChecks>false</EnableExpensiveChecks>
-    </Internal>
     <Tracing>
       <Verbosity>warning</Verbosity>
       <OutputFile>stderr</OutputFile>
