@@ -21,6 +21,7 @@
     "CYCLONEDDS_HOME": "/usr/local",
     "CYCLONEDDS_URI": "file:///workspace/.devcontainer/cyclonedds.xml",
     "ROS_DOMAIN_ID": "0",
+    "ROS_LOCALHOST_ONLY": "1",
     "RMW_IMPLEMENTATION": "rmw_cyclonedds_cpp"
   },
   "customizations": {
