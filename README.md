@@ -2,132 +2,92 @@
 
 [![한국어](https://img.shields.io/badge/lang-한국어-blue.svg)](README.ko.md)
 
-A MuJoCo simulation environment for the Unitree Go2 quadruped robot. Uses devcontainer to set up an Ubuntu environment inside Docker, with VNC for viewing the simulator display.
+A devcontainer-based MuJoCo simulation setup for the Unitree Go2 robot. It builds the SDKs under `/workspace/sdk` and exposes a VNC desktop so you can run the simulator in a browser.
 
-<img width="1492" height="792" alt="image" src="https://github.com/user-attachments/assets/c41d2ea3-71a4-4088-a117-975c6cef1497" />
+## Quickstart
 
-## Prerequisites
+### 1) Start the container
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-- One of the following:
-  - [VS Code](https://code.visualstudio.com/) + [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
-  - [devcontainer CLI](https://github.com/devcontainers/cli) (`npm install -g @devcontainers/cli`)
+- VS Code: **Reopen in Container**
+- devcontainer CLI:
+  ```bash
+  devcontainer up --workspace-folder .
+  devcontainer exec --workspace-folder . bash
+  ```
 
-## Setup
-
-### Option 1: VS Code (Recommended)
-
-1. Clone this repository.
-   ```bash
-   git clone https://github.com/iamchiwon-v6x/go2_under_docker.git
-   cd go2_under_docker
-   ```
-
-2. Open the folder in VS Code.
-   ```bash
-   code .
-   ```
-
-3. Click the `><` icon in the bottom-left corner and select **Reopen in Container**.
-
-4. The container build and dependency installation will run automatically (about 5–10 minutes on first run).
-
-### Option 2: devcontainer CLI
-
-```bash
-git clone https://github.com/iamchiwon-v6x/go2_under_docker.git
-cd go2_under_docker
-devcontainer up --workspace-folder .
-```
-
-Once the container is running, open a shell:
-
-```bash
-devcontainer exec --workspace-folder . bash
-```
-
-> **Tip**: You need two terminals for testing (one for the simulator, one for the control program). Run the command above in two separate terminal tabs.
-
-### What's Installed in the Container
-
-#### Docker Image (Dockerfile)
-
-| Category | Package | Description |
-|----------|---------|-------------|
-| Base | Ubuntu 22.04 | `mcr.microsoft.com/devcontainers/base:ubuntu-22.04` |
-| ROS2 | ros-humble-ros-base | ROS2 Humble core runtime |
-| ROS2 | ros-humble-rmw-cyclonedds-cpp | CycloneDDS RMW implementation |
-| ROS2 | ros-humble-rosidl-generator-dds-idl | DDS IDL generator |
-| ROS2 | ros-humble-cv-bridge | OpenCV–ROS2 bridge |
-| ROS2 | ros-humble-image-transport | Image transport library |
-| ROS2 Build | ros-dev-tools, python3-colcon-common-extensions, python3-rosdep | ROS2 build tools |
-| Python | mujoco, pygame, numpy, opencv-python-headless | Simulator dependencies |
-| Python | python3-opencv | OpenCV Python bindings |
-| System | cmake, build-essential, libgl1-mesa-dev, etc. | Build and graphics libraries |
-| VNC | desktop-lite (devcontainer feature) | Browser-based VNC desktop |
-
-#### Auto-Installed on First Run (post-create.sh)
-
-| Package | Description |
-|---------|-------------|
-| [unitree_mujoco](https://github.com/unitreerobotics/unitree_mujoco) | MuJoCo-based Unitree robot simulator |
-| [cyclonedds 0.10.2](https://github.com/eclipse-cyclonedds/cyclonedds) | DDS communication library (built from source) |
-| [unitree_sdk2](https://github.com/unitreerobotics/unitree_sdk2) | Unitree SDK2 C++ library (built from source) |
-| [unitree_sdk2_python](https://github.com/unitreerobotics/unitree_sdk2_python) | Unitree SDK2 Python bindings |
-| [unitree_ros2](https://github.com/unitreerobotics/unitree_ros2) | ROS2 interface packages for Go2 camera/sensor topics |
-| ROS2 workspace | `/workspace/ros2_ws/` with unitree_ros2 messages built |
-
-#### Environment Variables
-
-| Variable | Value | Description |
-|----------|-------|-------------|
-| `ROS_DOMAIN_ID` | `0` | ROS2 domain ID |
-| `ROS_LOCALHOST_ONLY` | `0` | Allow cross-host DDS discovery (for real robot communication) |
-| `RMW_IMPLEMENTATION` | `rmw_cyclonedds_cpp` | DDS middleware implementation |
-| `CYCLONEDDS_URI` | `file://${containerWorkspaceFolder}/.devcontainer/cyclonedds.xml` | CycloneDDS config file |
-| `CYCLONEDDS_HOME` | `/usr/local` | CycloneDDS install path |
-
-## Quick Start
-
-### 1. Start the Simulator
-
-In the container terminal:
+### 2) Run the simulator
 
 ```bash
 ./scripts/start_simulator.sh
 ```
 
-### 2. View via VNC
+### 3) View the VNC desktop (screenshot)
 
-Open **http://localhost:6080** in your browser to access the VNC desktop.
-- Password: `unitree`
-- If you see the Go2 robot in the MuJoCo window, everything is working.
+Open http://localhost:6080 (password: `unitree`). You should see the Go2 model running in MuJoCo.
 
-### 3. Run a Control Program
+<img width="1492" height="792" alt="Go2 MuJoCo in VNC" src="https://github.com/user-attachments/assets/c41d2ea3-71a4-4088-a117-975c6cef1497" />
 
-With the simulator running, open a **separate terminal** and run a control program.
+### 4) Run the stand example
 
-In VS Code, press `Ctrl+Shift+~` to open a new terminal. With devcontainer CLI, run `devcontainer exec --workspace-folder . bash` in a new terminal tab.
+Open a second terminal (the simulator must keep running):
 
 ```bash
-# Basic test: applies 1Nm torque to each motor and prints state
-./scripts/run_test.sh
-
-# Go2 stand up / lie down example
 ./scripts/stand_go2.sh
 ```
 
-### Script Reference
+Optional test program:
 
-| Script | Description |
-|--------|-------------|
-| `scripts/start_simulator.sh` | Launch the MuJoCo simulator |
-| `scripts/run_test.sh` | Basic motor test (requires simulator) |
-| `scripts/stand_go2.sh` | Go2 stand-up example (requires simulator) |
+```bash
+./scripts/run_test.sh
+```
+
+## Prerequisites
+
+- Docker Desktop
+- VS Code + Dev Containers extension, or devcontainer CLI
+
+## What Gets Installed
+
+### Base Image (Dockerfile)
+
+| Category | Package | Notes |
+|----------|---------|-------|
+| Base | Ubuntu 22.04 | `mcr.microsoft.com/devcontainers/base:ubuntu-22.04` |
+| ROS2 | ros-humble-ros-base | ROS2 Humble runtime |
+| ROS2 | ros-humble-rmw-cyclonedds-cpp | CycloneDDS RMW |
+| ROS2 | ros-humble-rosidl-generator-dds-idl | DDS IDL generator |
+| ROS2 | ros-humble-cv-bridge | OpenCV bridge |
+| ROS2 | ros-humble-image-transport | Image transport |
+| ROS2 Build | ros-dev-tools, python3-colcon-common-extensions, python3-rosdep | Build tools |
+| Python | mujoco, pygame, numpy, opencv-python-headless | Simulator deps |
+| Python | python3-opencv | OpenCV bindings |
+| System | cmake, build-essential, mesa libs, glfw | Build/graphics |
+| VNC | desktop-lite feature | Web VNC desktop |
+
+### Auto-Installed on First Run (post-create.sh)
+
+| Package | Location | Description |
+|---------|----------|-------------|
+| unitree_mujoco | `/workspace/sdk/unitree_mujoco` | MuJoCo simulator source |
+| cyclonedds 0.10.2 | `/usr/local` | DDS library (source build) |
+| unitree_sdk2 | `/workspace/sdk/unitree_sdk2` | C++ SDK (source build) |
+| unitree_sdk2_python | `/workspace/sdk/unitree_sdk2_python` | Python SDK (editable install) |
+| unitree_ros2 | `/workspace/ros2_ws/src/unitree_ros2` | ROS2 interface packages |
+| ROS2 workspace | `/workspace/ros2_ws` | Built with colcon |
+
+## Runtime Environment
+
+The scripts export these at runtime:
+
+| Variable | Value | Description |
+|----------|-------|-------------|
+| `CYCLONEDDS_HOME` | `/usr/local` | CycloneDDS install path |
+| `CYCLONEDDS_URI` | `file:///workspace/.devcontainer/cyclonedds.xml` | DDS config file |
+| `RMW_IMPLEMENTATION` | `rmw_cyclonedds_cpp` | DDS middleware |
 
 ## Simulator Configuration
 
-Config file: `unitree_mujoco/simulate_python/config.py`
+Config file: `/workspace/sdk/unitree_mujoco/simulate_python/config.py`
 
 ```python
 ROBOT = "go2"           # Robot model: "go2", "b2", "b2w", "h1", "go2w", "g1"
@@ -137,61 +97,38 @@ INTERFACE = "lo"        # Network interface (simulation: "lo")
 USE_JOYSTICK = 0        # Joystick usage (0 in Docker)
 ```
 
-## Shutting Down
-
-### Stop the Simulator
-
-Press `Ctrl+C` in the simulator terminal.
-
-### VS Code
-
-- Click the `><` icon in the bottom-left → select **Reopen Folder Locally** to exit the container.
-- To completely remove the container, delete it from Docker Desktop.
-
-### devcontainer CLI
-
-```bash
-# Find the container ID
-docker ps --filter "label=devcontainer.local_folder=$(pwd)" --format "{{.ID}}"
-
-# Stop the container
-docker stop <CONTAINER_ID>
-
-# Remove the container (optional)
-docker rm <CONTAINER_ID>
-```
-
 ## Project Structure
 
 ```
 go2_under_docker/
 ├── .devcontainer/
-│   ├── devcontainer.json    # Devcontainer config (VNC, port mapping, env vars)
-│   ├── Dockerfile           # Ubuntu 22.04 + system dependencies
-│   ├── post-create.sh       # Auto-install script
-│   └── cyclonedds.xml       # CycloneDDS communication config
+│   ├── devcontainer.json
+│   ├── Dockerfile
+│   ├── post-create.sh
+│   └── cyclonedds.xml
 ├── scripts/
-│   ├── start_simulator.sh   # Launch simulator
-│   ├── run_test.sh          # Basic motor test
-│   └── stand_go2.sh         # Go2 stand-up example
-├── .gitignore
-├── README.md                # English documentation
-└── README.ko.md             # Korean documentation (한국어)
+│   ├── start_simulator.sh
+│   ├── run_test.sh
+│   └── stand_go2.sh
+├── ros2_ws/
+│   ├── src/
+│   │   └── unitree_ros2/
+│   ├── build/
+│   ├── install/
+│   └── log/
+├── sdk/
+│   ├── unitree_mujoco/
+│   ├── unitree_sdk2/
+│   └── unitree_sdk2_python/
+├── README.md
+└── README.ko.md
 ```
-
-#### CycloneDDS Configuration (cyclonedds.xml)
-
-| Setting | Value | Description |
-|---------|-------|-------------|
-| `NetworkInterfaceAddress` | `eth0` | Bind DDS to the container's eth0 interface |
-| Peer 1 | `127.0.0.1` | Localhost (for simulator communication) |
-| Peer 2 | `192.168.123.18` | Go2 robot default IP (for real robot communication) |
 
 ## References
 
-- [unitree_mujoco](https://github.com/unitreerobotics/unitree_mujoco) — Original simulator repository
-- [unitree_sdk2](https://github.com/unitreerobotics/unitree_sdk2) — C++ SDK
-- [unitree_sdk2_python](https://github.com/unitreerobotics/unitree_sdk2_python) — Python SDK
-- [unitree_ros2](https://github.com/unitreerobotics/unitree_ros2) — ROS2 interface packages
-- [MuJoCo Documentation](https://mujoco.readthedocs.io/en/stable/overview.html)
-- [Unitree Developer Documentation](https://support.unitree.com/home/zh/developer)
+- https://github.com/unitreerobotics/unitree_mujoco
+- https://github.com/unitreerobotics/unitree_sdk2
+- https://github.com/unitreerobotics/unitree_sdk2_python
+- https://github.com/unitreerobotics/unitree_ros2
+- https://mujoco.readthedocs.io/en/stable/overview.html
+- https://support.unitree.com/home/zh/developer

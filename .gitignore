@@ -1,13 +1,12 @@
 # === Unitree External Repos (cloned at container creation time) ===
-unitree_mujoco/
-unitree_sdk2/
-unitree_sdk2_python/
+sdk/
 
 # === ROS 2 Build Artifacts ===
 # colcon build 시 생성되는 폴더들
 ros2_ws/build/
 ros2_ws/install/
 ros2_ws/log/
+ros2_ws/src/unitree_ros2/
 
 # === Python & SDK Build ===
 __pycache__/
