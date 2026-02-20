@@ -72,17 +72,19 @@ devcontainer exec --workspace-folder . bash
 |------|------|
 | [unitree_mujoco](https://github.com/unitreerobotics/unitree_mujoco) | MuJoCo 기반 Unitree 로봇 시뮬레이터 |
 | [cyclonedds 0.10.2](https://github.com/eclipse-cyclonedds/cyclonedds) | DDS 통신 라이브러리 (소스 빌드) |
+| [unitree_sdk2](https://github.com/unitreerobotics/unitree_sdk2) | Unitree SDK2 C++ 라이브러리 (소스 빌드) |
 | [unitree_sdk2_python](https://github.com/unitreerobotics/unitree_sdk2_python) | Unitree SDK2 Python 바인딩 |
-| ROS2 워크스페이스 | `/workspace/ros2_ws/` 초기화 및 빌드 |
+| [unitree_ros2](https://github.com/unitreerobotics/unitree_ros2) | Go2 카메라/센서 토픽용 ROS2 인터페이스 패키지 |
+| ROS2 워크스페이스 | `/workspace/ros2_ws/`에 unitree_ros2 메시지 빌드 |
 
 #### 환경 변수
 
 | 변수 | 값 | 설명 |
 |------|-----|------|
 | `ROS_DOMAIN_ID` | `0` | ROS2 도메인 ID |
-| `ROS_LOCALHOST_ONLY` | `1` | DDS discovery를 localhost로 제한 (Docker 호환) |
+| `ROS_LOCALHOST_ONLY` | `0` | 크로스 호스트 DDS discovery 허용 (실제 로봇 통신용) |
 | `RMW_IMPLEMENTATION` | `rmw_cyclonedds_cpp` | DDS 미들웨어 구현체 |
-| `CYCLONEDDS_URI` | `file:///.../cyclonedds.xml` | CycloneDDS 설정 파일 |
+| `CYCLONEDDS_URI` | `file://${containerWorkspaceFolder}/.devcontainer/cyclonedds.xml` | CycloneDDS 설정 파일 |
 | `CYCLONEDDS_HOME` | `/usr/local` | CycloneDDS 설치 경로 |
 
 ## 빠른 시작
@@ -174,16 +176,22 @@ go2_under_docker/
 │   └── stand_go2.sh         # Go2 일어서기 예제
 ├── .gitignore
 ├── README.md
-└── unitree_mujoco/          # (컨테이너 생성 시 자동 클론)
-    ├── simulate_python/     # Python 시뮬레이터 (기본 사용)
-    ├── unitree_robots/      # 로봇 MJCF 모델 파일
-    ├── terrain_tool/        # 지형 생성 도구
-    └── example/             # 예제 프로그램 (stand_go2 등)
+└── README.ko.md             # 한국어 문서
 ```
+
+#### CycloneDDS 설정 (cyclonedds.xml)
+
+| 설정 | 값 | 설명 |
+|------|-----|------|
+| `NetworkInterfaceAddress` | `eth0` | DDS를 컨테이너의 eth0 인터페이스에 바인딩 |
+| Peer 1 | `127.0.0.1` | localhost (시뮬레이터 통신용) |
+| Peer 2 | `192.168.123.18` | Go2 로봇 기본 IP (실제 로봇 통신용) |
 
 ## 참고 자료
 
 - [unitree_mujoco](https://github.com/unitreerobotics/unitree_mujoco) - 시뮬레이터 원본 레포지토리
+- [unitree_sdk2](https://github.com/unitreerobotics/unitree_sdk2) - C++ SDK
 - [unitree_sdk2_python](https://github.com/unitreerobotics/unitree_sdk2_python) - Python SDK
+- [unitree_ros2](https://github.com/unitreerobotics/unitree_ros2) - ROS2 인터페이스 패키지
 - [MuJoCo 문서](https://mujoco.readthedocs.io/en/stable/overview.html)
 - [Unitree 개발자 문서](https://support.unitree.com/home/zh/developer)

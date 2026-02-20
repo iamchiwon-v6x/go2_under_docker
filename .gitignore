@@ -1,21 +1,35 @@
-# unitree_mujoco (cloned at container creation time)
+# === Unitree External Repos (cloned at container creation time) ===
 unitree_mujoco/
+unitree_sdk2/
+unitree_sdk2_python/
 
-# Python
+# === ROS 2 Build Artifacts ===
+# colcon build 시 생성되는 폴더들
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
+
+# === Python & SDK Build ===
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
 *.egg-info/
 dist/
 build/
+# Editable install 시 생성되는 링크 파일
+.eggs/
 
-# OS
+# === OS & IDE ===
 .DS_Store
 Thumbs.db
-
-# IDE
-.vscode/*
+.vscode/
 !.vscode/settings.json
 .idea/
 *.swp
 *.swo
+
+# === Configuration & Logs ===
+# CycloneDDS 로그 및 임시 설정 파일
+*.xml.bak
+cyclonedds.log

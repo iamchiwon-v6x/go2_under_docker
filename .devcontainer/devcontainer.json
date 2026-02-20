@@ -19,9 +19,9 @@
     "DISPLAY": ":1",
     "LIBGL_ALWAYS_SOFTWARE": "1",
     "CYCLONEDDS_HOME": "/usr/local",
-    "CYCLONEDDS_URI": "file:///workspace/.devcontainer/cyclonedds.xml",
+    "CYCLONEDDS_URI": "file://${containerWorkspaceFolder}/.devcontainer/cyclonedds.xml",
     "ROS_DOMAIN_ID": "0",
-    "ROS_LOCALHOST_ONLY": "1",
+    "ROS_LOCALHOST_ONLY": "0",
     "RMW_IMPLEMENTATION": "rmw_cyclonedds_cpp"
   },
   "customizations": {

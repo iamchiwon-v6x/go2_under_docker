@@ -72,17 +72,19 @@ devcontainer exec --workspace-folder . bash
 |---------|-------------|
 | [unitree_mujoco](https://github.com/unitreerobotics/unitree_mujoco) | MuJoCo-based Unitree robot simulator |
 | [cyclonedds 0.10.2](https://github.com/eclipse-cyclonedds/cyclonedds) | DDS communication library (built from source) |
+| [unitree_sdk2](https://github.com/unitreerobotics/unitree_sdk2) | Unitree SDK2 C++ library (built from source) |
 | [unitree_sdk2_python](https://github.com/unitreerobotics/unitree_sdk2_python) | Unitree SDK2 Python bindings |
-| ROS2 workspace | `/workspace/ros2_ws/` initialization and build |
+| [unitree_ros2](https://github.com/unitreerobotics/unitree_ros2) | ROS2 interface packages for Go2 camera/sensor topics |
+| ROS2 workspace | `/workspace/ros2_ws/` with unitree_ros2 messages built |
 
 #### Environment Variables
 
 | Variable | Value | Description |
 |----------|-------|-------------|
 | `ROS_DOMAIN_ID` | `0` | ROS2 domain ID |
-| `ROS_LOCALHOST_ONLY` | `1` | Restrict DDS discovery to localhost (Docker compatible) |
+| `ROS_LOCALHOST_ONLY` | `0` | Allow cross-host DDS discovery (for real robot communication) |
 | `RMW_IMPLEMENTATION` | `rmw_cyclonedds_cpp` | DDS middleware implementation |
-| `CYCLONEDDS_URI` | `file:///.../cyclonedds.xml` | CycloneDDS config file |
+| `CYCLONEDDS_URI` | `file://${containerWorkspaceFolder}/.devcontainer/cyclonedds.xml` | CycloneDDS config file |
 | `CYCLONEDDS_HOME` | `/usr/local` | CycloneDDS install path |
 
 ## Quick Start
@@ -174,17 +176,22 @@ go2_under_docker/
 │   └── stand_go2.sh         # Go2 stand-up example
 ├── .gitignore
 ├── README.md                # English documentation
-├── README.ko.md             # Korean documentation (한국어)
-└── unitree_mujoco/          # (auto-cloned on container creation)
-    ├── simulate_python/     # Python simulator (default)
-    ├── unitree_robots/      # Robot MJCF model files
-    ├── terrain_tool/        # Terrain generation tool
-    └── example/             # Example programs (stand_go2, etc.)
+└── README.ko.md             # Korean documentation (한국어)
 ```
+
+#### CycloneDDS Configuration (cyclonedds.xml)
+
+| Setting | Value | Description |
+|---------|-------|-------------|
+| `NetworkInterfaceAddress` | `eth0` | Bind DDS to the container's eth0 interface |
+| Peer 1 | `127.0.0.1` | Localhost (for simulator communication) |
+| Peer 2 | `192.168.123.18` | Go2 robot default IP (for real robot communication) |
 
 ## References
 
 - [unitree_mujoco](https://github.com/unitreerobotics/unitree_mujoco) — Original simulator repository
+- [unitree_sdk2](https://github.com/unitreerobotics/unitree_sdk2) — C++ SDK
 - [unitree_sdk2_python](https://github.com/unitreerobotics/unitree_sdk2_python) — Python SDK
+- [unitree_ros2](https://github.com/unitreerobotics/unitree_ros2) — ROS2 interface packages
 - [MuJoCo Documentation](https://mujoco.readthedocs.io/en/stable/overview.html)
 - [Unitree Developer Documentation](https://support.unitree.com/home/zh/developer)

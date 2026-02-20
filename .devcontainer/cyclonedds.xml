@@ -3,12 +3,14 @@
   <Domain id="any">
     <General>
       <AllowMulticast>false</AllowMulticast>
+      <NetworkInterfaceAddress>eth0</NetworkInterfaceAddress>
     </General>
     <Discovery>
       <ParticipantIndex>auto</ParticipantIndex>
       <MaxAutoParticipantIndex>100</MaxAutoParticipantIndex>
       <Peers>
-        <Peer address="localhost" />
+        <Peer address="127.0.0.1" />
+        <Peer address="192.168.123.18" />
       </Peers>
     </Discovery>
     <Tracing>
